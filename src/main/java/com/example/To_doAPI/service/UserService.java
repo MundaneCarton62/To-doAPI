@@ -7,18 +7,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService (UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User saveUser(User user){
+    public User saveUser(User user) {
+
+        Optional<User> exists = userRepository.findByEmailIgnoreCase(user.getEmail());
+        if (exists.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist with email: " + user.getEmail());
+        }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);

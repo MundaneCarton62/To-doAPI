@@ -71,6 +71,10 @@ public class User implements UserDetails {
         return true;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @SuppressWarnings("unused")
     public String getName() {
         return name;
@@ -94,5 +98,15 @@ public class User implements UserDetails {
     @SuppressWarnings("unused")
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @SuppressWarnings("unused")
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    @SuppressWarnings("unused")
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

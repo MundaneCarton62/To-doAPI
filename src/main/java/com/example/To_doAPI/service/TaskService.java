@@ -1,6 +1,7 @@
 package com.example.To_doAPI.service;
 
 import com.example.To_doAPI.dto.CreateTaskRequest;
+import com.example.To_doAPI.dto.TaskResponse;
 import com.example.To_doAPI.model.Task;
 import com.example.To_doAPI.model.User;
 import com.example.To_doAPI.repository.TaskRepository;
@@ -20,7 +21,7 @@ public class TaskService {
         this.userService = userService;
     }
 
-    public Task saveTask(CreateTaskRequest request, String email) {
+    public TaskResponse saveTask(CreateTaskRequest request, String email) {
 
         User user = userService.findByEmail(email);
 
@@ -29,18 +30,39 @@ public class TaskService {
         task.setDescription(request.getDescription());
         task.setUser(user);
 
-        return taskRepository.save(task);
+        Task saved = taskRepository.save(task);
+
+        return new TaskResponse(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getDescription()
+        );
     }
 
-    public Task updateTask(Long id, Task task) {
+    public TaskResponse updateTask(Long id, CreateTaskRequest task, String email) {
 
         Task found = taskRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found with id: " + id));
 
+        User user = userService.findByEmail(email);
+
+        // ownership check (you’ll add this next)
+        if(!found.getUser().getId().equals(user.getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You are not allowed to update this task");
+        }
+
         found.setTitle(task.getTitle());
         found.setDescription(task.getDescription());
 
-        return taskRepository.save(found);
+        Task saved = taskRepository.save(found);
+
+
+        return new TaskResponse(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getDescription()
+        );
     }
 
     public void deleteTaskById(Long id) {
