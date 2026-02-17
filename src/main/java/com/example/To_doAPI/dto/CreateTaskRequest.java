@@ -10,6 +10,11 @@ public class CreateTaskRequest {
     @NotBlank
     String description;
 
+    public CreateTaskRequest(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+
     @SuppressWarnings("unused")
     public CreateTaskRequest() {
     }

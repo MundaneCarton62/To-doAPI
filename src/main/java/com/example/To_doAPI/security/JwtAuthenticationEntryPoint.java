@@ -1,6 +1,5 @@
 package com.example.To_doAPI.security;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -15,7 +14,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException)
-            throws IOException, ServletException {
+            throws IOException {
 
         if (response.getStatus() == HttpServletResponse.SC_OK) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
