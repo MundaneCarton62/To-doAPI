@@ -1,6 +1,7 @@
 package com.example.To_doAPI.controller;
 
 import com.example.To_doAPI.dto.LoginResponse;
+import com.example.To_doAPI.dto.RegisterRequest;
 import com.example.To_doAPI.model.User;
 import com.example.To_doAPI.service.JwtService;
 import com.example.To_doAPI.service.UserService;
@@ -23,7 +24,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<LoginResponse> saveUser(@Valid @RequestBody User user){
+    public ResponseEntity<LoginResponse> saveUser(@Valid @RequestBody RegisterRequest request){
+
+        User user = new User(
+                request.getName(),
+                request.getEmail(),
+                request.getPassword()
+        );
 
         User saved = userService.saveUser(user);
 

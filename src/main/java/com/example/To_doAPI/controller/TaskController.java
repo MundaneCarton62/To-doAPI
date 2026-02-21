@@ -7,8 +7,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @SuppressWarnings("unused")
@@ -40,5 +42,43 @@ public class TaskController {
         String email = principal.getName();
 
         return ResponseEntity.ok(taskService.updateTask(id, request, email));
+    }
+
+    @DeleteMapping("/todos/{id}")
+    @SuppressWarnings("unused")
+    public ResponseStatusException deleteTask(@PathVariable Long id,
+                                              Principal principal){
+
+        String email = principal.getName();
+
+        return taskService.deleteTaskById(id, email);
+    }
+
+    @GetMapping("/todos")
+    @SuppressWarnings("unused")
+    public ResponseEntity<Map<String, Object>> listUserTasks(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) String title,
+            Principal principal) {
+
+        String email = principal.getName();
+
+        return ResponseEntity.ok(
+                taskService.findTasksByUser(email, page, limit, title)
+        );
+    }
+
+    @GetMapping("/todos/{id}")
+    public ResponseEntity<TaskResponse> getTaskById(
+            @PathVariable Long id,
+            Principal principal) {
+
+        String email = principal.getName();
+
+        TaskResponse task =
+                taskService.getTaskByIdForUser(id, email);
+
+        return ResponseEntity.ok(task);
     }
 }

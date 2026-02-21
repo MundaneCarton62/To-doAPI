@@ -1,32 +1,36 @@
 package com.example.To_doAPI.dto;
 
 import jakarta.validation.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-public class LoginRequest {
+public class RegisterRequest {
+
+
+    @NotBlank
+    private String name;
 
     @NotBlank
     @Email
-    String email;
+    private String email;
 
     @NotBlank
-    String password;
+    @Size(min = 6)
+    private String password;
 
-    @SuppressWarnings("unused")
-    public LoginRequest() {
+    public String getName() {
+        return name;
     }
 
     @SuppressWarnings("unused")
-    public LoginRequest(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
         return email;
     }
 
-    @SuppressWarnings("unused")
     public void setEmail(String email) {
         this.email = email;
     }
@@ -35,7 +39,6 @@ public class LoginRequest {
         return password;
     }
 
-    @SuppressWarnings("unused")
     public void setPassword(String password) {
         this.password = password;
     }
