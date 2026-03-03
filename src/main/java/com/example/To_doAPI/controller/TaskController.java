@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.Map;
@@ -46,12 +45,14 @@ public class TaskController {
 
     @DeleteMapping("/todos/{id}")
     @SuppressWarnings("unused")
-    public ResponseStatusException deleteTask(@PathVariable Long id,
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id,
                                               Principal principal){
 
         String email = principal.getName();
 
-        return taskService.deleteTaskById(id, email);
+        taskService.deleteTaskById(id, email);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/todos")
